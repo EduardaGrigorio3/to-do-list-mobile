@@ -23,14 +23,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tarefaAdapter: TarefaAdapter
 
     private var tarefaSelecionada: Tarefa? = null
-    private lateinit var db: SQLiteDatabase // Adicione esta linha para a instância do banco
+    private lateinit var db: SQLiteDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         bancoHelper = BancoDeDadosHelper(this)
-        db = bancoHelper.writableDatabase // Abra o banco aqui (writable para todas as operações)
+        db = bancoHelper.writableDatabase
 
         editTextTarefa = findViewById(R.id.editTextTarefa)
         buttonAdicionar = findViewById(R.id.buttonAdicionar)
@@ -67,11 +67,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        db.close() // Feche o banco quando a Activity for destruída
+        db.close()
     }
 
     private fun carregarTarefas() {
-        // Passe a instância 'db' para o helper
+
         val tarefas = bancoHelper.buscarTodasTarefas(db)
         tarefaAdapter.updateTarefas(tarefas)
         limparCampos()
@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
     private fun adicionarTarefa() {
         val nomeTarefa = editTextTarefa.text.toString().trim()
         if (nomeTarefa.isNotBlank()) {
-            // Passe a instância 'db' para o helper
+
             val id = bancoHelper.inserirTarefa(db, nomeTarefa)
             if (id != -1L) {
                 Toast.makeText(this, "Tarefa adicionada!", Toast.LENGTH_SHORT).show()
@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
 
         if (novoNome.isNotBlank() && tarefa != null) {
             val tarefaAtualizada = Tarefa(tarefa.id, novoNome)
-            // Passe a instância 'db' para o helper
+
             val rowsAffected = bancoHelper.atualizarTarefa(db, tarefaAtualizada)
 
             if (rowsAffected > 0) {
@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun deletarTarefa(id: Int) {
-        // Passe a instância 'db' para o helper
+
         val rowsAffected = bancoHelper.deletarTarefa(db, id)
         if (rowsAffected > 0) {
             Toast.makeText(this, "Tarefa excluída!", Toast.LENGTH_SHORT).show()

@@ -28,8 +28,7 @@ class BancoDeDadosHelper(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        // Quando o banco de dados é atualizado, dropa a tabela antiga e cria uma nova.
-        // Em um app de produção, você faria um ALTER TABLE para preservar dados.
+
         db.execSQL("DROP TABLE IF EXISTS $TABLE_TAREFAS")
         onCreate(db)
     }
@@ -37,24 +36,22 @@ class BancoDeDadosHelper(context: Context) :
     // --- Operações CRUD ---
 
     // CREATE
-    // Recebe a instância do banco de dados (db)
     fun inserirTarefa(db: SQLiteDatabase, nome: String): Long {
         val valores = ContentValues().apply {
             put(COLUMN_NOME, nome)
         }
         val id = db.insert(TABLE_TAREFAS, null, valores)
-        // db.close() REMOVIDO
+
         return id
     }
 
     // READ (todas as tarefas)
-    // Recebe a instância do banco de dados (db)
     fun buscarTodasTarefas(db: SQLiteDatabase): List<Tarefa> {
         val tarefas = mutableListOf<Tarefa>()
-        // Usamos db.rawQuery diretamente na instância passada
+
         val cursor = db.rawQuery("SELECT * FROM $TABLE_TAREFAS ORDER BY $COLUMN_ID DESC", null)
 
-        cursor?.use { // 'use' garante que o cursor será fechado, mesmo sem fechar o db
+        cursor?.use {
             if (it.moveToFirst()) {
                 val idColumnIndex = it.getColumnIndex(COLUMN_ID)
                 val nomeColumnIndex = it.getColumnIndex(COLUMN_NOME)
@@ -66,12 +63,11 @@ class BancoDeDadosHelper(context: Context) :
                 } while (it.moveToNext())
             }
         }
-        // db.close() REMOVIDO
+
         return tarefas
     }
 
     // UPDATE
-    // Recebe a instância do banco de dados (db)
     fun atualizarTarefa(db: SQLiteDatabase, tarefa: Tarefa): Int {
         val valores = ContentValues().apply {
             put(COLUMN_NOME, tarefa.nome)
@@ -82,19 +78,18 @@ class BancoDeDadosHelper(context: Context) :
             "$COLUMN_ID = ?",
             arrayOf(tarefa.id.toString())
         )
-        // db.close() REMOVIDO
+
         return rowsAffected
     }
 
     // DELETE
-    // Recebe a instância do banco de dados (db)
     fun deletarTarefa(db: SQLiteDatabase, id: Int): Int {
         val rowsAffected = db.delete(
             TABLE_TAREFAS,
             "$COLUMN_ID = ?",
             arrayOf(id.toString())
         )
-        // db.close() REMOVIDO
+
         return rowsAffected
     }
 }
