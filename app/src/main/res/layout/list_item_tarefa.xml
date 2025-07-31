@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginStart="2dp"
+    android:layout_marginEnd="2dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp"
+    app:cardBackgroundColor="?attr/colorSurface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="8dp"
+        android:paddingVertical="12dp"
+        android:gravity="center_vertical">
+
+        <CheckBox
+            android:id="@+id/checkBoxConcluida"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            app:buttonTint="?attr/colorPrimary" />
+
+        <TextView
+            android:id="@+id/textViewTarefaNome"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:textColor="@color/task_text_color"
+            android:text="Nome da Tarefa Exemplo"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif" />
+
+        <ImageButton
+            android:id="@+id/buttonEdit"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/baseline_edit_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Editar Tarefa"
+            app:tint="@color/button_edit_color"
+            android:padding="12dp" />
+
+        <ImageButton
+            android:id="@+id/buttonDelete"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/baseline_delete_24"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Excluir Tarefa"
+            app:tint="@color/button_delete_color"
+            android:padding="12dp" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
