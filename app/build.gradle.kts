@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.mayra.to_do_list_mobile" // Certifique-se de que seu namespace está correto
+    namespace = "com.mayra.to_do_list_mobile"
     compileSdk = 35
 
     defaultConfig {
@@ -39,8 +39,8 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material) // Para o Button, EditText etc.
-    implementation(libs.androidx.constraintlayout) // Para layout mais flexível
+    implementation(libs.material)
+    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
