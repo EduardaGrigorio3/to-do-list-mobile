@@ -86,8 +86,19 @@
     <ListView
         android:id="@+id/listViewTarefas"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/divider_color"
+        android:layout_height="0dp"
+        android:layout_weight="1"  android:divider="@color/divider_color"
         android:dividerHeight="1dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonLimparConcluidas"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Limpar Tarefas Concluídas"
+        android:layout_marginTop="16dp"
+        android:paddingVertical="12dp"
+        app:cornerRadius="8dp"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:textColor="?attr/colorError" />
 
 </LinearLayout>

@@ -21,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var buttonAtualizar: Button
     private lateinit var listViewTarefas: ListView
     private lateinit var tarefaAdapter: TarefaAdapter
+    private lateinit var buttonLimparConcluidas: Button
 
     private var tarefaSelecionada: Tarefa? = null
     private lateinit var db: SQLiteDatabase
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         buttonAdicionar = findViewById(R.id.buttonAdicionar)
         buttonAtualizar = findViewById(R.id.buttonAtualizar)
         listViewTarefas = findViewById(R.id.listViewTarefas)
+        buttonLimparConcluidas = findViewById(R.id.buttonLimparConcluidas)
 
         tarefaAdapter = TarefaAdapter(
             this,
@@ -50,6 +52,9 @@ class MainActivity : AppCompatActivity() {
                 buttonAtualizar.isEnabled = true
                 editTextTarefa.requestFocus()
                 editTextTarefa.setSelection(editTextTarefa.text.length)
+            },
+            onToggleConcluida = { tarefa, isChecked ->
+                atualizarEstadoTarefa(tarefa, isChecked)
             }
         )
         listViewTarefas.adapter = tarefaAdapter
@@ -62,6 +67,10 @@ class MainActivity : AppCompatActivity() {
 
         buttonAtualizar.setOnClickListener {
             atualizarTarefa()
+        }
+
+        buttonLimparConcluidas.setOnClickListener {
+            mostrarDialogoLimparConcluidas()
         }
     }
 
@@ -115,6 +124,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun atualizarEstadoTarefa(tarefa: Tarefa, isConcluida: Boolean) {
+        val rowsAffected = bancoHelper.atualizarEstadoConcluida(db, tarefa.id, isConcluida)
+        if (rowsAffected > 0) {
+
+        } else {
+            Toast.makeText(this, "Erro ao atualizar estado da tarefa.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
     private fun mostrarDialogoExclusao(tarefa: Tarefa) {
         AlertDialog.Builder(this)
             .setTitle("Excluir Tarefa")
@@ -147,5 +166,30 @@ class MainActivity : AppCompatActivity() {
         tarefaSelecionada = null
         buttonAdicionar.isEnabled = true
         buttonAtualizar.isEnabled = false
+    }
+
+    private fun mostrarDialogoLimparConcluidas() {
+        AlertDialog.Builder(this)
+            .setTitle("Limpar Tarefas Concluídas")
+            .setMessage("Tem certeza que deseja excluir todas as tarefas marcadas como concluídas?")
+            .setPositiveButton("Sim") { dialog, _ ->
+                limparTarefasConcluidas()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Não") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
+
+    private fun limparTarefasConcluidas() {
+        val rowsAffected = bancoHelper.deletarTarefasConcluidas(db)
+        if (rowsAffected > 0) {
+            Toast.makeText(this, "$rowsAffected tarefas concluídas excluídas!", Toast.LENGTH_SHORT).show()
+            carregarTarefas() // Recarrega a lista para mostrar as remoções
+        } else {
+            Toast.makeText(this, "Nenhuma tarefa concluída para excluir.", Toast.LENGTH_SHORT).show()
+        }
     }
 }

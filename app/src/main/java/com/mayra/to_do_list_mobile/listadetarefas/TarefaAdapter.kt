@@ -16,10 +16,9 @@ class TarefaAdapter(
     context: Context,
     private val tarefas: MutableList<Tarefa>,
     private val onDeleteClick: (Tarefa) -> Unit,
-    private val onEditClick: (Tarefa) -> Unit
+    private val onEditClick: (Tarefa) -> Unit,
+    private val onToggleConcluida: (Tarefa, Boolean) -> Unit
 ) : ArrayAdapter<Tarefa>(context, 0, tarefas) {
-    
-    private val isConcluidaMap = mutableMapOf<Int, Boolean>()
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         var listItemView = convertView
@@ -40,22 +39,23 @@ class TarefaAdapter(
 
         nomeTextView?.text = currentTarefa?.nome
 
-        checkBoxConcluida?.isChecked = isConcluidaMap[currentTarefa?.id] ?: false
+        checkBoxConcluida?.isChecked = currentTarefa?.isConcluida ?: false
 
         nomeTextView?.let { textView ->
-            if (checkBoxConcluida?.isChecked == true) {
+            if (currentTarefa?.isConcluida == true) {
                 textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             } else {
                 textView.paintFlags = textView.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             }
         }
 
-        // Listener para o CheckBox
         checkBoxConcluida?.setOnCheckedChangeListener { _, isChecked ->
             currentTarefa?.let {
-                // Atualiza o mapa com o novo estado
-                isConcluidaMap[it.id] = isChecked
-                // Re-aplica o estilo de riscado imediatamente
+
+                it.isConcluida = isChecked
+
+                onToggleConcluida(it, isChecked)
+
                 nomeTextView?.let { textView ->
                     if (isChecked) {
                         textView.paintFlags = textView.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -66,15 +66,12 @@ class TarefaAdapter(
             }
         }
 
-        // Listener para o botão de exclusão
         buttonDelete?.setOnClickListener {
             currentTarefa?.let {
                 onDeleteClick(it)
-                isConcluidaMap.remove(it.id)
             }
         }
 
-        // Listener para o botão de edição
         buttonEdit?.setOnClickListener {
             currentTarefa?.let {
                 onEditClick(it)
@@ -84,7 +81,7 @@ class TarefaAdapter(
         return listItemView!!
     }
 
-    fun updateTarefas(newTarefas: List< Tarefa>) {
+    fun updateTarefas(newTarefas: List<Tarefa>) {
         tarefas.clear()
         tarefas.addAll(newTarefas)
         notifyDataSetChanged()
